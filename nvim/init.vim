@@ -55,6 +55,7 @@ Plug 'nvim-lua/plenary.nvim'
 
 " Treesitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
 " LSP, Autocompletion, Rust
 Plug 'williamboman/mason.nvim'
