@@ -4,14 +4,14 @@ if not status_ok then
   return
 end
 
--- Disable netrw (recommended by nvim-tree)
+-- Disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- open new tab for given node.
 local function spawn_bg_tab(node)
   local api = require "nvim-tree.api"
-  -- Save the current window and tabpage
+  -- Start by checking what window/tab we're in.
   local current_win = vim.api.nvim_get_current_win()
   local current_tab = vim.api.nvim_get_current_tabpage()
 
@@ -37,6 +37,7 @@ local function custom_key_binds(bufnr)
     vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
     -- bind t to open file in a new tab.
     vim.keymap.set("n", "t", api.node.open.tab, opts("Open: New Tab"))
+    -- and T for background tabs.
     vim.keymap.set("n", "T", function()
         local node = api.tree.get_node_under_cursor()
         spawn_bg_tab(node)
@@ -44,7 +45,6 @@ local function custom_key_binds(bufnr)
 end
 
 
--- Setup nvim-tree
 nvim_tree.setup({
   -- Auto open tree when opening a file
   view = {
@@ -98,7 +98,7 @@ nvim_tree.setup({
   -- Update focused file
   update_focused_file = {
     enable = true,
-    update_root = true,  -- Allow changing root when finding files outside current tree
+    update_root = true,  -- Allows changing root when finding files outside of current root... not sure if we want to do this, though, it helps for our `,et` binding so keep it for now.
     ignore_list = {},
   },
 
@@ -106,12 +106,8 @@ nvim_tree.setup({
     on_attach = custom_key_binds,
 })
 
--- Auto-open nvim-tree when opening a file (not a directory)
 local function open_nvim_tree(data)
-  -- Buffer is a file
   local file = data.file ~= "" and vim.fn.filereadable(data.file) == 1
-  
-  -- Buffer is a directory
   local directory = vim.fn.isdirectory(data.file) == 1
   
   if not file and not directory then
@@ -135,7 +131,6 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
 
 -- Function to get current path context for Telescope
 local function get_telescope_path()
-  -- Check if nvim-tree is focused
   local current_buf = vim.api.nvim_get_current_buf()
   local buf_name = vim.api.nvim_buf_get_name(current_buf)
   
@@ -154,7 +149,7 @@ local function get_telescope_path()
     end
   end
   
-  -- Fallback: use current buffer's directory or PWD
+  -- Use current buffer directory or PWD (Fallback scenario).
   local current_file = vim.fn.expand("%:p")
   if current_file ~= "" then
     return vim.fn.fnamemodify(current_file, ":h")
@@ -163,13 +158,11 @@ local function get_telescope_path()
   end
 end
 
--- Function to open Telescope with smart path detection
 local function telescope_smart_find()
   local path = get_telescope_path()
   require('telescope.builtin').find_files({ cwd = path })
 end
 
--- Function to open Telescope live grep with smart path detection
 local function telescope_smart_grep()
   local path = get_telescope_path()
   require('telescope.builtin').live_grep({ cwd = path })

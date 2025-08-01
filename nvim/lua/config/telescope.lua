@@ -13,7 +13,7 @@ telescope.setup({
   extensions = {
     file_browser = {
       theme = "ivy",
-      -- Disable netrw and use telescope-file-browser in its place
+      -- Disable netrw, replace with telescope
       hijack_netrw = true,
       mappings = {
         ["i"] = {
@@ -54,10 +54,8 @@ telescope.setup({
   },
 })
 
--- Load the file browser extension
 telescope.load_extension("file_browser")
 
--- Auto-open file browser when opening a file
 local function open_telescope_browser(data)
   -- Buffer is a file
   local file = data.file ~= "" and vim.fn.filereadable(data.file) == 1
@@ -70,36 +68,31 @@ local function open_telescope_browser(data)
   end
   
   if directory then
-    -- Change to the directory and open browser
     vim.cmd.cd(data.file)
     vim.cmd("Telescope file_browser")
   else
-    -- Open browser in the file's directory
     local file_dir = vim.fn.expand("%:p:h")
     vim.cmd("Telescope file_browser path=" .. file_dir)
   end
 end
 
--- Uncomment the line below if you want auto-open behavior
+-- disable auto-open behaviour for now.
 -- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_telescope_browser })
 
 -- Key mappings for Telescope file browser
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
--- Open file browser in current working directory
+-- open pwd.
 keymap("n", "<leader>Tt", ":Telescope file_browser<CR>", opts)
 
--- Open file browser in current file's directory (equivalent to :NERDTreeFind)
+-- NERDTreeFind of old.
 keymap("n", "<leader>Tf", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", opts)
 
--- Open file browser in home directory
-keymap("n", "<leader>th", ":Telescope file_browser path=~<CR>", opts)
-
--- Additional telescope mappings for file operations
+-- Search.
 keymap("n", "<leader>ff", ":Telescope find_files<CR>", opts)
 keymap("n", "<leader>fg", ":Telescope live_grep<CR>", opts)
--- this might become the quick/common keybind (leader + G for grep)
-keymap("n", "<leader>G", ":Telescope live_grep<CR>", opts)
+-- Find buffers
+-- keymap("n", "<leader>G", ":Telescope live_grep<CR>", opts)
 keymap("n", "<leader>fb", ":Telescope buffers<CR>", opts)
-keymap("n", "<leader>fh", ":Telescope help_tags<CR>", opts)
+-- keymap("n", "<leader>fh", ":Telescope help_tags<CR>", opts)

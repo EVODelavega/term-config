@@ -1,3 +1,4 @@
+-- This is probably not needed anymore.
 require("rust-tools").setup {
   server = {
     on_attach = function(_, bufnr)

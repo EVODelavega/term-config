@@ -14,7 +14,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
     vim.b.tagbar_opened = true
     -- get the current focused window/buffer
     local current_win = vim.api.nvim_get_current_win()
-    -- Defer execution slightly to avoid race with Telescope closing windows
+    -- Defer execution slightly to avoid race with Telescope closing windows,
+    -- Defer by 100ms to avoid annoying window-closing race stuff.
     vim.defer_fn(function()
       -- Re-check the window is still valid and not floating
       local valid = vim.api.nvim_win_is_valid(winid)
@@ -26,7 +27,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
             vim.api.nvim_set_current_win(current_win)
         end
       end
-    end, 100) -- 100ms delay to avoid window-closing race
+    end, 100)
   end,
 })
 

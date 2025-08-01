@@ -11,7 +11,7 @@ lspconfig.gopls.setup {
         },
     }
 }
--- Optional: Format on save
+-- Format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.go",
   callback = function()
@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
--- Optional: Lint on save
+-- Lint on save
 vim.api.nvim_create_autocmd("BufWritePost", {
   pattern = "*.go",
   callback = function()
