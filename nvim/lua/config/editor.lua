@@ -15,3 +15,26 @@ require('Comment').setup()
 require('lualine').setup {
   options = { theme = 'gruvbox' }
 }
+
+local delete_hidden_bufs = function()
+  local in_tab = {}
+  -- map all buffers currently active in any tab.
+  for tab = 1, vim.fn.tabpagenr('$') do
+    for _, buf in ipairs(vim.fn.tabpagebuflist(tab)) do
+      in_tab[buf] = true
+    end
+  end
+
+  -- now iterate over all buffers
+  for buf = 1, vim.fn.bufnr('$') do
+    -- buffer exists, but not in any of the tabs, close it.
+    if vim.fn.bufexists(buf) == 1 and not in_tab[buf] then
+      vim.cmd('silent bwipeout ' .. buf)
+    end
+  end
+end
+
+vim.keymap.set('n', '<leader>DH', delete_hidden_bufs, { noremap = true, silent = true })
+-- expose as direct call through :lua DeleteHiddenBuffers()
+-- Optional, commented out for the time being
+-- _G.DeleteHiddenBuffers = delete_hidden_bufs
