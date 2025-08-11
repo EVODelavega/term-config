@@ -119,3 +119,5 @@ vim.keymap.set('n', '<leader>uc', uncomment_line, { desc = 'Uncomment line' })
 -- Visual mode mapping
 vim.keymap.set('v', '<leader>cc', comment_visual, { desc = 'Comment selection' })
 
+-- Diagnostic key mappings (global)
+vim.keymap.set('n', '<leader>ds', vim.diagnostic.open_float, { desc='Show diagnostic float', noremap=true, silent=true })
