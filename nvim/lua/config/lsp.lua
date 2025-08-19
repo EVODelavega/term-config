@@ -1,10 +1,10 @@
 require("mason").setup()
--- ensure LSP's are installed
-require("mason-lspconfig").setup({
+-- Either ensure LSP's are installed, runs them with default config
+-- disabled for now, as it conflicts with the manual lspconfig stuff below (starts mutliple LSP's)
+-- require("mason-lspconfig").setup({
     -- ensure_installed = { "taplo", "pyright", "marksman", "bash-language-server", "lua-language-server", "eslint-lsp", "eslint_d" }
-    -- for some reason, eslint-lsp doesn't work woth ensure_installed.
-    ensure_installed = { "taplo", "pyright", "marksman", "bash-language-server", "lua-language-server" }
-})
+    -- ensure_installed = { "taplo", "pyright", "marksman", "bash-language-server", "lua-language-server" }
+-- })
 
 local lspconfig = require("lspconfig")
 lspconfig.gopls.setup {

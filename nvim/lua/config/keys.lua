@@ -112,6 +112,27 @@ local function comment_visual()
   vim.cmd("'<,'>normal! I" .. delim)
 end
 
+local function append_mode_line()
+  local comment_m = get_comment_delim() -- Using your provided function
+  local expandtab_str = vim.o.expandtab and '' or 'no'
+
+  local modeline = string.format(
+    "%svim: set ts=%d sw=%d tw=%d foldlevel=%d foldmethod=%s %set :",
+    comment_m,
+    vim.o.tabstop,
+    vim.o.shiftwidth,
+    vim.o.textwidth,
+    vim.o.foldlevel,
+    vim.o.foldmethod,
+    expandtab_str
+  )
+
+  vim.fn.append(vim.fn.line('$'), modeline)
+end
+
+-- nnoremap append mode line to bottom of file.
+vim.keymap.set('n', '<Leader>ml', append_mode_line, { silent = true })
+
 -- Normal mode mappings
 vim.keymap.set('n', '<leader>cc', comment_line, { desc = 'Comment line' })
 vim.keymap.set('n', '<leader>uc', uncomment_line, { desc = 'Uncomment line' })
